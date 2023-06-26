@@ -1,7 +1,6 @@
 {
-  "appId": "com.example.app",
-  "appName": "my-app",
-  "bundledWebRuntime": false,
+  "appId": "com.myresume.app",
+  "appName": "myresume",
   "webDir": "www",
   "plugins": {
     "SplashScreen": {
