@@ -11228,7 +11228,7 @@ registerPlugin("CapacitorHttp", {
   web: () => new CapacitorHttpPluginWeb()
 });
 const App = registerPlugin("App", {
-  web: () => __vitePreload(() => import("./web-637000e0.js"), true ? [] : void 0).then((m) => new m.AppWeb())
+  web: () => __vitePreload(() => import("./web-c301de16.js"), true ? [] : void 0).then((m) => new m.AppWeb())
 });
 function useExitApp() {
   const isQuit = ref(false);
@@ -11461,6 +11461,9 @@ const _sfc_main$1 = {
     };
   }
 };
+const Toast = registerPlugin("Toast", {
+  web: () => __vitePreload(() => import("./web-f28e8896.js"), true ? [] : void 0).then((m) => new m.ToastWeb())
+});
 const HomeView_vue_vue_type_style_index_0_lang = "";
 const _hoisted_1 = { class: "columns is-centered has-background-white mx-0" };
 const _hoisted_2 = { class: "fixed-go-top" };
@@ -11475,10 +11478,16 @@ const _sfc_main = {
     const { isQuit, addCountdown } = useExitApp();
     const { isIOS: isIOS2, isAndroid, isMobile } = useDetectBrowser();
     const platForm = Capacitor.getPlatform();
+    const showToast = async (showText) => {
+      await Toast.show({
+        text: showText
+      });
+    };
     const exitMyApp = () => {
       if (isQuit.value) {
         App.exitApp();
       } else {
+        showToast("***** 再按一次退出程序");
         isQuit.value = true;
         addCountdown();
       }
@@ -11544,7 +11553,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => __vitePreload(() => import("./AboutView-06ac0f27.js"), true ? ["assets/AboutView-06ac0f27.js","assets/AboutView-fe0787ef.css"] : void 0)
+      component: () => __vitePreload(() => import("./AboutView-7675fdc2.js"), true ? ["assets/AboutView-7675fdc2.js","assets/AboutView-fe0787ef.css"] : void 0)
     }
   ]
 });

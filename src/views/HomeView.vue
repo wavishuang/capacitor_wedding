@@ -59,11 +59,19 @@
 
     const platForm = Capacitor.getPlatform()
 
+    import { Toast } from '@capacitor/toast';
+
+    const showToast = async (showText) => {
+      await Toast.show({
+        text: showText,
+      })
+    }
+
     const exitMyApp = () => {
       if(isQuit.value) {
         App.exitApp()
       } else {
-        // toast.value.show('再按一次退出程序')
+        showToast('再按一次退出程序')
         isQuit.value = true
         addCountdown()
       }
