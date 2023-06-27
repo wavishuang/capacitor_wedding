@@ -71,7 +71,7 @@
       if(isQuit.value) {
         App.exitApp()
       } else {
-        showToast('再按一次退出程序')
+        showToast('再按一次退出程序aaa')
         isQuit.value = true
         addCountdown()
       }
