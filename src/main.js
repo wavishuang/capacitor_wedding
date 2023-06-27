@@ -2,7 +2,13 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faHome, faPhone, faEnvelope, faList } from '@fortawesome/free-solid-svg-icons'
+import { 
+  faHome, faPhone, faEnvelope, faList,
+  faCoffee, faCaretUp, faCaretDown, faCaretLeft, faCaretRight,
+  faArrowRightFromBracket, faDownload
+} from '@fortawesome/free-solid-svg-icons'
+import 'bulma/css/bulma.min.css'
+
 
 import App from './App.vue'
 import router from './router'
@@ -14,6 +20,9 @@ library.add(
   faPhone,
   faEnvelope,
   faList,
+  faCoffee,
+  faCaretUp, faCaretDown, faCaretLeft, faCaretRight,
+  faArrowRightFromBracket, faDownload
 )
 
 const app = createApp(App).component('font-awesome-icon', FontAwesomeIcon)

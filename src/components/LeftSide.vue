@@ -144,4 +144,11 @@
   align-items: center;
   margin-bottom: 20px;
 }
+
+@media (max-width: 1023Px) {
+  .left-side .title {
+    width: 90%;
+    max-width: 330px;
+  }
+}
 </style>
