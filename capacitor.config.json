@@ -1,0 +1,13 @@
+{
+  "appId": "com.wedding.app",
+  "appName": "weddingPass",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
