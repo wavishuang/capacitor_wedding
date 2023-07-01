@@ -1,40 +1,62 @@
 <template>
   <div 
-    class="home max-width-1024 has-background-white"
+    class="home"
     ref="homeRef"
   >
-    <Header />
+    <div class="home-bg"></div>
 
-    <div class="columns is-centered has-background-white mx-0">
-      <LeftSide class="column is-5 pt-6 px-0" />
-      <RightSide 
-        class="column is-7 pt-6 px-4" 
-      />
-    </div>
+    <div class="home-wrapper">
+      <Navbar />
 
-    <div class="fixed-go-top">
-      <i @click="backToTop">Top</i>
-      <!-- 退出 App -->
-      <i v-if="platForm === 'android'" class="hidden-desktop" @click.prevent="showModal = true">
-        <font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" />
-      </i>
-      <!-- 下載 apk -->
-      <a v-if="platForm === 'web' && isAndroid" href="/app-myresume.apk">
-        <font-awesome-icon icon="fa-solid fa-download" />
-      </a>
+      <div class="home-inner">
+        <div class="content">
+          <h2 class="title">WEDDING PASS</h2>
+
+          <div class="options">
+            <div class="option">
+              <div class="line"></div>
+              <div class="img-cover icon01">
+                <img src="@/assets/icon01-1.png" />
+              </div>
+              <div class="option-text">輕鬆管理</div>
+            </div>
+            <div class="option">
+              <div class="line"></div>
+              <div class="img-cover icon02">
+                <img src="@/assets/icon02-1.png" />
+              </div>
+              <div class="option-text">提領喜餅</div>
+            </div>
+            <div class="option">
+              <div class="line"></div>
+              <div class="img-cover icon03">
+                <img src="@/assets/icon03-1.png" />
+              </div>
+              <div class="option-text">QRCode快速簽到</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-footer">
+          <button type="button" class="btn btn-link">
+            設計專屬於你的祝福
+          </button>
+        </div>
+      </div>
+      
     </div>
   </div>
-  <ModalLogout 
+  <!-- <ModalLogout 
     v-if="showModal"
     v-model="showModal"
-  />
+  /> -->
 </template>
 
 <script setup>
   /**
   * imports
   */
-    import Header from '@/components/Header.vue'
+    import Navbar from '@/components/Navbar.vue'
     import LeftSide from '@/components/LeftSide.vue'
     import RightSide from '@/components/RightSide.vue'
     import { ref } from 'vue'
@@ -99,48 +121,207 @@
     const showModal = ref(false)
 </script>
 
-<style>
-.max-width-1024 {
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+
+.home {
   width: 100%;
-  max-width: 1024px;
-  margin: 0 auto;
-}
+  height: 100%;
+  padding: 67px 5.15625% 97px;
+  min-height: calc(38vw + 105px + 2.86458vw + 2.60416vw);
 
-.fixed-go-top {
-  position: fixed;
-  bottom: 15%;
-  right: 25px;
-}
+  .home-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #3B3B3B 0% 0% no-repeat border-box;
+    opacity: 0.44;
+  }
 
-.fixed-go-top i,
-.fixed-go-top a {
-  width: 60px;
-  height: 60px;
-  font-size: 25px;
-  border-radius: 50%;
-  border: 1px solid #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: #c8a063;
-  color: #fff;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  margin-top: 1rem;
-}
-
-@media (min-width: 768px) {
-  .hidden-desktop {
-    display: none !important;
+  .home-wrapper {
+    position: relative;
+    z-index: 1;
+    height: calc(100vh - 67px - 97px);
   }
 }
 
-@media (max-width: 767px) {
-  .fixed-go-top i,
-  .fixed-go-top a {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
+.home-inner {
+  border: 3px solid #fff;
+  border-radius: 16px;
+  height: calc(100% - 2.86458vw - 2.60416vw);
+  padding: 6.97916vw 0 0; //3.125vw 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 38vw;
+
+  .content {
+    width: 78%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 15px;
+
+    .title {
+      font-family: 'Libre Baskerville';
+      font-weight: 600;
+      font-size: 3.90625vw;
+      line-height: 4.79166vw;
+      letter-spacing: 3.75px;
+      color: #F5F5F4;
+      opacity: 1;
+      text-align: center;
+    }
+    
+    .options {
+      display: flex;
+      justify-content: space-around;
+      border-top: 3px solid #fff;
+      padding: 2.39583vw 0 0;
+
+      .option {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 11.9791vw;
+        justify-content: space-between;
+        .line {
+          width: 3px;
+          height: 1.171875vw;
+          background-color: #fff;
+          min-height: 13.5px;
+        }
+        .img-cover {
+          &.icon01 {
+            width: 2.8125vw;
+            min-width: 18px;
+          }
+          &.icon02 {
+            width: 4.16667vw;
+            min-width: 26px;
+          }
+          &.icon03 {
+            width: 5vw;
+            min-width: 32px;
+          }
+          img {
+            width: 100%;
+          }
+        }
+
+        .option-text {
+          font-family: 'Noto Sans TC';
+          font-weight: bold;
+          font-size: 1.40625vw;
+          line-height: 1.875vw;
+          letter-spacing: 2.7px;
+          color: #FFFFFF;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .content-footer {
+    margin: 3.90625vw 0;
+    .btn.btn-link {
+      width: 26.40625vw;
+      height: 5.3125vw;
+      /* UI Properties */
+      background: #F4F4F590 0% 0% no-repeat padding-box;
+      border: 2px solid #FFFFFF;
+      border-radius: 0px 2.86458vw;
+      opacity: 1;
+      font-family: 'Noto Sans TC';
+      font-weight: bold;
+      font-size: 1.92708vw;
+      line-height: 2.55208vw;
+      letter-spacing: 3.7px;
+      color: #4C4053;
+      min-width: 217px;
+      min-height: 44px;
+    }
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .home {
+    padding: 0;
+
+    .home-wrapper {
+      height: 100%;
+      padding-bottom: 8.7vw;
+    }
+  }
+
+  .home-inner {
+    width: calc(100vw - 10vw);
+    margin: 6.4vw auto 8.7vw;
+    height: calc(100vh - 65px - 6.4vw - 8.7vw);
+    border-width: 1px;
+
+    .content {
+      .title {
+        font-size: 22px;
+        line-height: 27px;
+      }
+      .options {
+        border-width: 1px;
+        .option {
+          .line {
+            width: 1px;
+          }
+          .option-text {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    .content-footer {
+      .btn.btn-link {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .home-inner {
+    .content {
+      .options {
+        .option {
+          height: 118px;
+          .img-cover {
+            &.icon01,
+            &.icon02 {
+              &+.option-text {
+                width: 40px;
+                line-height: 21px;
+              }
+            }
+
+            &.icon03 {
+              &+.option-text {
+                width: 80px;
+                line-height: 21px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .content-footer {
+      .btn.btn-link {
+        border-radius: 0 20px;
+      }
+    }
   }
 }
 </style>

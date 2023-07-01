@@ -1,5 +1,8 @@
 <template>
-  <RouterView />
+  <div class="layout">
+    <RouterView />
+  </div>
+  
 
   <!-- <footer class="footer">
     <div class="content has-text-centered">
@@ -14,13 +17,15 @@
 <script setup>
 </script>
 
-<style>
-@import "bulma/css/bulma.min.css";
-
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 1rem;
+<style lang="scss">
+.layout {
+  width: 100vw;
+  height: 100vh;
+  background-image: url(@/assets/main_bg3.png);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 </style>

@@ -184,28 +184,6 @@ const isSpecialBooleanAttr = /* @__PURE__ */ makeMap(specialBooleanAttrs);
 function includeBooleanAttr(value) {
   return !!value || value === "";
 }
-const toDisplayString = (val) => {
-  return isString(val) ? val : val == null ? "" : isArray$1(val) || isObject(val) && (val.toString === objectToString || !isFunction(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
-};
-const replacer = (_key, val) => {
-  if (val && val.__v_isRef) {
-    return replacer(_key, val.value);
-  } else if (isMap(val)) {
-    return {
-      [`Map(${val.size})`]: [...val.entries()].reduce((entries, [key, val2]) => {
-        entries[`${key} =>`] = val2;
-        return entries;
-      }, {})
-    };
-  } else if (isSet(val)) {
-    return {
-      [`Set(${val.size})`]: [...val.values()]
-    };
-  } else if (isObject(val) && !isArray$1(val) && !isPlainObject(val)) {
-    return String(val);
-  }
-  return val;
-};
 let activeEffectScope;
 class EffectScope {
   constructor(detached = false) {
@@ -284,11 +262,6 @@ function recordEffectScope(effect, scope = activeEffectScope) {
 }
 function getCurrentScope() {
   return activeEffectScope;
-}
-function onScopeDispose(fn) {
-  if (activeEffectScope) {
-    activeEffectScope.cleanups.push(fn);
-  }
 }
 const createDep = (effects) => {
   const dep = new Set(effects);
@@ -1996,41 +1969,6 @@ function resolveAsset(type, name, warnMissing = true, maybeSelfReference = false
 }
 function resolve(registry, name) {
   return registry && (registry[name] || registry[camelize(name)] || registry[capitalize(camelize(name))]);
-}
-function renderList(source, renderItem, cache, index) {
-  let ret;
-  const cached = cache && cache[index];
-  if (isArray$1(source) || isString(source)) {
-    ret = new Array(source.length);
-    for (let i = 0, l = source.length; i < l; i++) {
-      ret[i] = renderItem(source[i], i, void 0, cached && cached[i]);
-    }
-  } else if (typeof source === "number") {
-    ret = new Array(source);
-    for (let i = 0; i < source; i++) {
-      ret[i] = renderItem(i + 1, i, void 0, cached && cached[i]);
-    }
-  } else if (isObject(source)) {
-    if (source[Symbol.iterator]) {
-      ret = Array.from(
-        source,
-        (item, i) => renderItem(item, i, void 0, cached && cached[i])
-      );
-    } else {
-      const keys = Object.keys(source);
-      ret = new Array(keys.length);
-      for (let i = 0, l = keys.length; i < l; i++) {
-        const key = keys[i];
-        ret[i] = renderItem(source[key], key, i, cached && cached[i]);
-      }
-    }
-  } else {
-    ret = [];
-  }
-  if (cache) {
-    cache[index] = ret;
-  }
-  return ret;
 }
 const getPublicInstance = (i) => {
   if (!i)
@@ -4456,19 +4394,6 @@ function createElementBlock(type, props, children, patchFlag, dynamicProps, shap
     )
   );
 }
-function createBlock(type, props, children, patchFlag, dynamicProps) {
-  return setupBlock(
-    createVNode(
-      type,
-      props,
-      children,
-      patchFlag,
-      dynamicProps,
-      true
-      /* isBlock: prevent a block from tracking itself */
-    )
-  );
-}
 function isVNode(value) {
   return value ? value.__v_isVNode === true : false;
 }
@@ -4649,9 +4574,6 @@ function createStaticVNode(content, numberOfNodes) {
   const vnode = createVNode(Static, null, content);
   vnode.staticCount = numberOfNodes;
   return vnode;
-}
-function createCommentVNode(text = "", asBlock = false) {
-  return asBlock ? (openBlock(), createBlock(Comment, null, text)) : createVNode(Comment, null, text);
 }
 function normalizeVNode(child) {
   if (child == null || typeof child === "boolean") {
@@ -5369,30 +5291,6 @@ function shouldSetAsProp(el, key, value, isSVG) {
   }
   return key in el;
 }
-const systemModifiers = ["ctrl", "shift", "alt", "meta"];
-const modifierGuards = {
-  stop: (e) => e.stopPropagation(),
-  prevent: (e) => e.preventDefault(),
-  self: (e) => e.target !== e.currentTarget,
-  ctrl: (e) => !e.ctrlKey,
-  shift: (e) => !e.shiftKey,
-  alt: (e) => !e.altKey,
-  meta: (e) => !e.metaKey,
-  left: (e) => "button" in e && e.button !== 0,
-  middle: (e) => "button" in e && e.button !== 1,
-  right: (e) => "button" in e && e.button !== 2,
-  exact: (e, modifiers) => systemModifiers.some((m) => e[`${m}Key`] && !modifiers.includes(m))
-};
-const withModifiers = (fn, modifiers) => {
-  return (event, ...args) => {
-    for (let i = 0; i < modifiers.length; i++) {
-      const guard = modifierGuards[modifiers[i]];
-      if (guard && guard(event, modifiers))
-        return;
-    }
-    return fn(event, ...args);
-  };
-};
 const rendererOptions = /* @__PURE__ */ extend({ patchProp }, nodeOps);
 let renderer;
 function ensureRenderer() {
@@ -5614,14 +5512,14 @@ function _nonIterableSpread() {
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-var noop$2 = function noop() {
+var noop$1 = function noop() {
 };
 var _WINDOW = {};
 var _DOCUMENT = {};
 var _MUTATION_OBSERVER = null;
 var _PERFORMANCE = {
-  mark: noop$2,
-  measure: noop$2
+  mark: noop$1,
+  measure: noop$1
 };
 try {
   if (typeof window !== "undefined")
@@ -6835,7 +6733,7 @@ var perf = {
   begin,
   end
 };
-var noop$2$1 = function noop3() {
+var noop$2 = function noop3() {
 };
 function isWatched(node) {
   var i2svg2 = node.getAttribute ? node.getAttribute(DATA_FA_I2SVG) : null;
@@ -6938,7 +6836,7 @@ function performOperationSync(op) {
   op();
 }
 function perform(mutations, callback) {
-  var callbackFunction = typeof callback === "function" ? callback : noop$2$1;
+  var callbackFunction = typeof callback === "function" ? callback : noop$2;
   if (mutations.length === 0) {
     callbackFunction();
   } else {
@@ -6970,7 +6868,7 @@ function observe(options) {
   if (!config.observeMutations) {
     return;
   }
-  var _options$treeCallback = options.treeCallback, treeCallback = _options$treeCallback === void 0 ? noop$2$1 : _options$treeCallback, _options$nodeCallback = options.nodeCallback, nodeCallback = _options$nodeCallback === void 0 ? noop$2$1 : _options$nodeCallback, _options$pseudoElemen = options.pseudoElementsCallback, pseudoElementsCallback = _options$pseudoElemen === void 0 ? noop$2$1 : _options$pseudoElemen, _options$observeMutat = options.observeMutationsRoot, observeMutationsRoot = _options$observeMutat === void 0 ? DOCUMENT : _options$observeMutat;
+  var _options$treeCallback = options.treeCallback, treeCallback = _options$treeCallback === void 0 ? noop$2 : _options$treeCallback, _options$nodeCallback = options.nodeCallback, nodeCallback = _options$nodeCallback === void 0 ? noop$2 : _options$nodeCallback, _options$pseudoElemen = options.pseudoElementsCallback, pseudoElementsCallback = _options$pseudoElemen === void 0 ? noop$2 : _options$pseudoElemen, _options$observeMutat = options.observeMutationsRoot, observeMutationsRoot = _options$observeMutat === void 0 ? DOCUMENT : _options$observeMutat;
   mo = new MUTATION_OBSERVER(function(objects) {
     if (disabled)
       return;
@@ -8383,6 +8281,11 @@ var faCaretRight = {
   iconName: "caret-right",
   icon: [256, 512, [], "f0da", "M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"]
 };
+var faBars = {
+  prefix: "fas",
+  iconName: "bars",
+  icon: [448, 512, ["navicon"], "f0c9", "M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"]
+};
 var faCaretLeft = {
   prefix: "fas",
   iconName: "caret-left",
@@ -8444,12 +8347,15 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const _sfc_main$6 = {};
-function _sfc_render$2(_ctx, _cache) {
+const _sfc_main$2 = {};
+const _hoisted_1$2 = { class: "layout" };
+function _sfc_render$1(_ctx, _cache) {
   const _component_RouterView = resolveComponent("RouterView");
-  return openBlock(), createBlock(_component_RouterView);
+  return openBlock(), createElementBlock("div", _hoisted_1$2, [
+    createVNode(_component_RouterView)
+  ]);
 }
-const App$1 = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$2]]);
+const App$1 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1]]);
 const scriptRel = "modulepreload";
 const assetsURL = function(dep) {
   return "/" + dep;
@@ -8512,7 +8418,7 @@ function applyToParams(fn, params) {
   }
   return newParams;
 }
-const noop$1 = () => {
+const noop4 = () => {
 };
 const isArray = Array.isArray;
 const TRAILING_SLASH_RE = /\/$/;
@@ -9253,7 +9159,7 @@ function createRouterMatcher(routes, globalOptions) {
     }
     return originalMatcher ? () => {
       removeRoute(originalMatcher);
-    } : noop$1;
+    } : noop4;
   }
   function removeRoute(matcherRef) {
     if (isRouteName(matcherRef)) {
@@ -9616,7 +9522,7 @@ function useLink(props) {
       return router2[unref(props.replace) ? "replace" : "push"](
         unref(props.to)
         // avoid uncaught errors are they are logged anyway
-      ).catch(noop$1);
+      ).catch(noop4);
     }
     return Promise.resolve();
   }
@@ -10096,7 +10002,7 @@ function createRouter(options) {
       const toLocation = resolve2(to);
       const shouldRedirect = handleRedirectRecord(toLocation);
       if (shouldRedirect) {
-        pushWithRedirect(assign(shouldRedirect, { replace: true }), toLocation).catch(noop$1);
+        pushWithRedirect(assign(shouldRedirect, { replace: true }), toLocation).catch(noop4);
         return;
       }
       pendingLocation = toLocation;
@@ -10129,7 +10035,7 @@ function createRouter(options) {
             ) && !info.delta && info.type === NavigationType.pop) {
               routerHistory.go(-1, false);
             }
-          }).catch(noop$1);
+          }).catch(noop4);
           return Promise.reject();
         }
         if (info.delta) {
@@ -10161,7 +10067,7 @@ function createRouter(options) {
           }
         }
         triggerAfterEach(toLocation, from, failure);
-      }).catch(noop$1);
+      }).catch(noop4);
     });
   }
   let readyHandlers = useCallbacks();
@@ -10288,444 +10194,85 @@ function extractChangingRecords(to, from) {
   }
   return [leavingRecords, updatingRecords, enteringRecords];
 }
-const _imports_0 = "/assets/avatar-71f10cd2.png";
-const Header_vue_vue_type_style_index_0_scoped_c8a08b0c_lang = "";
-const _sfc_main$5 = {};
-const _hoisted_1$5 = { class: "columns is-full is-justify-content-flex-start" };
-const _hoisted_2$5 = /* @__PURE__ */ createStaticVNode('<div class="column is-5" data-v-c8a08b0c><div class="img-cover" data-v-c8a08b0c><img src="' + _imports_0 + '" title="jeff huang" alt="jeff huang" data-v-c8a08b0c></div></div><div class="column is-3 information is-family-monospace" data-v-c8a08b0c><div class="name is-size-3" data-v-c8a08b0c>黃國欽</div><div class="name-en is-size-4" data-v-c8a08b0c>Jeff Huang</div><div class="job-title is-size-3" data-v-c8a08b0c>前端工程師</div></div>', 2);
-const _hoisted_4$4 = [
-  _hoisted_2$5
-];
-function _sfc_render$1(_ctx, _cache) {
-  return openBlock(), createElementBlock("header", _hoisted_1$5, _hoisted_4$4);
-}
-const Header = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$1], ["__scopeId", "data-v-c8a08b0c"]]);
-const LeftSide_vue_vue_type_style_index_0_lang = "";
-const _sfc_main$4 = {};
-const _hoisted_1$4 = { class: "left-side" };
-const _hoisted_2$4 = { class: "is-family-monospace" };
-const _hoisted_3$4 = /* @__PURE__ */ createBaseVNode("div", { class: "title is-size-5" }, [
-  /* @__PURE__ */ createTextVNode(" 聯絡方式 "),
-  /* @__PURE__ */ createBaseVNode("span", { class: "is-size-6 ml-2" }, "CONTACT")
+const _imports_0$1 = "/assets/icon01-1-fdb567b4.png";
+const _imports_1$1 = "/assets/icon02-1-2357afc7.png";
+const _imports_2 = "/assets/icon03-1-193683fa.png";
+const _imports_0 = "/assets/logo_b-a4aefbd1.png";
+const _imports_1 = "data:image/png;base64,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";
+const Navbar_vue_vue_type_style_index_0_lang = "";
+const _sfc_main$1 = {};
+const _hoisted_1$1 = {
+  class: "navbar",
+  role: "navigation",
+  "aria-label": "main navigation"
+};
+const _hoisted_2$1 = { class: "navbar-brand" };
+const _hoisted_3$1 = {
+  role: "button",
+  class: "navbar-burger burgur-mobile",
+  "aria-label": "menu",
+  "aria-expanded": "false",
+  "data-target": "navbarBasicExample"
+};
+const _hoisted_4 = /* @__PURE__ */ createBaseVNode("img", {
+  src: _imports_0,
+  class: "logo-desktop"
+}, null, -1);
+const _hoisted_5 = /* @__PURE__ */ createBaseVNode("img", {
+  src: _imports_1,
+  class: "logo-mobile"
+}, null, -1);
+const _hoisted_6 = {
+  role: "button",
+  class: "navbar-burger",
+  "aria-label": "menu",
+  "aria-expanded": "false",
+  "data-target": "navbarBasicExample"
+};
+const _hoisted_7 = /* @__PURE__ */ createBaseVNode("div", {
+  id: "navbarBasicExample",
+  class: "navbar-menu"
+}, [
+  /* @__PURE__ */ createBaseVNode("div", { class: "navbar-end" }, [
+    /* @__PURE__ */ createBaseVNode("div", { class: "navbar-item" }, [
+      /* @__PURE__ */ createBaseVNode("a", {
+        class: "btn btn-link",
+        href: "tel:+886-2-77099959"
+      }, [
+        /* @__PURE__ */ createBaseVNode("strong", null, "02-77099959")
+      ])
+    ])
+  ])
 ], -1);
-const _hoisted_4$3 = { class: "contact-info" };
-const _hoisted_5$3 = { class: "mt-6" };
-const _hoisted_6$2 = { class: "flex" };
-const _hoisted_7$2 = { class: "icon mr-3" };
-const _hoisted_8$2 = /* @__PURE__ */ createBaseVNode("a", {
-  href: "tel:+886987567627",
-  class: "has-text-white has-text-weight-bold"
-}, "0987567627", -1);
-const _hoisted_9$2 = { class: "flex" };
-const _hoisted_10$1 = { class: "icon mr-3" };
-const _hoisted_11$1 = /* @__PURE__ */ createBaseVNode("a", {
-  href: "mailto:wavishuang@gmail.com",
-  class: "has-text-white has-text-weight-bold"
-}, " wavishuang@gmail.com ", -1);
-const _hoisted_12 = { class: "flex" };
-const _hoisted_13 = { class: "icon mr-3" };
-const _hoisted_14 = /* @__PURE__ */ createBaseVNode("a", {
-  href: "https://www.google.com/maps/place/%E6%96%B0%E5%8C%97%E5%B8%82%E4%B8%AD%E5%92%8C%E5%8D%80%E4%B8%AD%E5%B1%B1%E8%B7%AF%E4%B8%89%E6%AE%B5/@25.007313,121.4726502,17z/data=!3m1!4b1!4m6!3m5!1s0x3442a8276ab2d179:0x3c6433646d322b98!8m2!3d25.007313!4d121.4752305!16s%2Fg%2F1tcvrk24?authuser=0&entry=ttu",
-  class: "has-text-white has-text-weight-bold"
-}, " 新北市中和區中山路三段 ", -1);
-const _hoisted_15 = /* @__PURE__ */ createStaticVNode('<div class="is-family-monospace"><div class="title is-size-5"> 專業技能 <span class="is-size-6 ml-2">SKILL</span></div><div class="contact-info"><ul class="mt-6"><li class="block has-text-weight-bold"><div class="is-size-5"> 前端技能： </div><div class="pl-5"> HTML, CSS, SCSS, JavaScript, jQuery, Vue2, Vue3, Pinia, React </div></li><li class="block has-text-weight-bold"><div class="is-size-5"> 後端技能： </div><div class="pl-5"> PHP, Codeigniter </div></li><li class="block has-text-weight-bold"><div class="is-size-5"> 資料庫： </div><div class="pl-5"> MySQL </div></li><li class="block has-text-weight-bold"><div class="is-size-5"> 其他： </div><div class="pl-5"> Git, docker, Linux基本指令 </div></li></ul></div></div><div class="is-family-monospace"><div class="title is-size-5"> 專業證照 <span class="is-size-6 ml-2">CERTIFICATION</span></div><div class="contact-info"><ul class="mt-6"><li class="block has-text-weight-bold"><div class="is-size-5"> 網路相關： </div><div class="pl-5"> CCNA </div></li></ul></div></div>', 2);
 function _sfc_render(_ctx, _cache) {
   const _component_font_awesome_icon = resolveComponent("font-awesome-icon");
-  return openBlock(), createElementBlock("div", _hoisted_1$4, [
-    createBaseVNode("div", _hoisted_2$4, [
-      _hoisted_3$4,
-      createBaseVNode("div", _hoisted_4$3, [
-        createBaseVNode("ul", _hoisted_5$3, [
-          createBaseVNode("li", _hoisted_6$2, [
-            createBaseVNode("span", _hoisted_7$2, [
-              createVNode(_component_font_awesome_icon, { icon: ["fas", "phone"] })
-            ]),
-            _hoisted_8$2
-          ]),
-          createBaseVNode("li", _hoisted_9$2, [
-            createBaseVNode("span", _hoisted_10$1, [
-              createVNode(_component_font_awesome_icon, { icon: ["fas", "envelope"] })
-            ]),
-            _hoisted_11$1
-          ]),
-          createBaseVNode("li", _hoisted_12, [
-            createBaseVNode("span", _hoisted_13, [
-              createVNode(_component_font_awesome_icon, { icon: ["fas", "home"] })
-            ]),
-            _hoisted_14
-          ])
-        ])
+  const _component_router_link = resolveComponent("router-link");
+  return openBlock(), createElementBlock("nav", _hoisted_1$1, [
+    createBaseVNode("div", _hoisted_2$1, [
+      createBaseVNode("a", _hoisted_3$1, [
+        createVNode(_component_font_awesome_icon, { icon: "fa-solid fa-bars" })
+      ]),
+      createVNode(_component_router_link, {
+        to: "/",
+        class: "navbar-item"
+      }, {
+        default: withCtx(() => [
+          _hoisted_4,
+          _hoisted_5
+        ]),
+        _: 1
+      }),
+      createBaseVNode("a", _hoisted_6, [
+        createVNode(_component_font_awesome_icon, { icon: "fa-solid fa-bars" })
       ])
     ]),
-    _hoisted_15
+    _hoisted_7
   ]);
 }
-const LeftSide = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render]]);
+const Navbar = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render]]);
+const LeftSide_vue_vue_type_style_index_0_lang = "";
 const ExperienceItem_vue_vue_type_style_index_0_lang = "";
-const _hoisted_1$3 = { class: "card-content" };
-const _hoisted_2$3 = { class: "company is-size-5 has-text-weight-bold" };
-const _hoisted_3$3 = { class: "ml-2 is-size-6 job-title" };
-const _hoisted_4$2 = { class: "salary mb-3" };
-const _hoisted_5$2 = { class: "is-flex is-flex-wrap-wrap" };
-const _hoisted_6$1 = { class: "content" };
-const _hoisted_7$1 = /* @__PURE__ */ createBaseVNode("div", null, "工作內容：", -1);
-const _hoisted_8$1 = { class: "mt-1 pl-4" };
-const _hoisted_9$1 = { class: "tools" };
-const _hoisted_10 = /* @__PURE__ */ createBaseVNode("div", null, "使用技術：", -1);
-const _hoisted_11 = { class: "is-flex is-flex-wrap-wrap pl-4" };
-const _sfc_main$3 = {
-  __name: "ExperienceItem",
-  props: {
-    experience: {
-      type: Object,
-      required: true
-    }
-  },
-  setup(__props) {
-    return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", null, [
-        createBaseVNode("div", _hoisted_1$3, [
-          createBaseVNode("div", _hoisted_2$3, [
-            createBaseVNode("strong", null, toDisplayString(__props.experience.company), 1),
-            createBaseVNode("span", _hoisted_3$3, toDisplayString(__props.experience.jobTitle), 1)
-          ]),
-          createBaseVNode("div", null, "期間：" + toDisplayString(__props.experience.startDate) + " ~ " + toDisplayString(__props.experience.endDate), 1),
-          createBaseVNode("div", null, "工作範圍：" + toDisplayString(__props.experience.description), 1),
-          createBaseVNode("div", _hoisted_4$2, [
-            createBaseVNode("ul", _hoisted_5$2, [
-              createBaseVNode("li", null, "月薪" + toDisplayString(__props.experience.monthlySalary) + "元", 1),
-              createBaseVNode("li", null, "年薪" + toDisplayString(__props.experience.annualSalary) + "元", 1),
-              createBaseVNode("li", null, toDisplayString(__props.experience.location), 1)
-            ])
-          ]),
-          createBaseVNode("div", _hoisted_6$1, [
-            _hoisted_7$1,
-            createBaseVNode("ol", _hoisted_8$1, [
-              (openBlock(true), createElementBlock(Fragment, null, renderList(__props.experience.jobs, (job, index) => {
-                return openBlock(), createElementBlock("li", { key: index }, toDisplayString(job), 1);
-              }), 128))
-            ])
-          ]),
-          createBaseVNode("div", _hoisted_9$1, [
-            _hoisted_10,
-            createBaseVNode("ul", _hoisted_11, [
-              (openBlock(true), createElementBlock(Fragment, null, renderList(__props.experience.tools, (tool, index) => {
-                return openBlock(), createElementBlock("li", {
-                  key: index,
-                  class: "has-text-weight-bold"
-                }, toDisplayString(tool), 1);
-              }), 128))
-            ])
-          ])
-        ])
-      ]);
-    };
-  }
-};
 const RightSide_vue_vue_type_style_index_0_lang = "";
-const _hoisted_1$2 = { class: "right-side" };
-const _hoisted_2$2 = { class: "is-family-monospace mb-6" };
-const _hoisted_3$2 = /* @__PURE__ */ createBaseVNode("div", { class: "section-title is-flex is-align-items-center has-text-weight-bold" }, [
-  /* @__PURE__ */ createBaseVNode("div", { class: "circle-dot mr-3" }, [
-    /* @__PURE__ */ createBaseVNode("div")
-  ]),
-  /* @__PURE__ */ createBaseVNode("div", { class: "is-flex is-align-items-baseline" }, [
-    /* @__PURE__ */ createTextVNode("自傳"),
-    /* @__PURE__ */ createBaseVNode("span", { class: "ml-3" }, "AUTOBIOGRAPHY")
-  ])
-], -1);
-const _hoisted_4$1 = { class: "section-content mt-5" };
-const _hoisted_5$1 = { class: "card" };
-const _hoisted_6 = ["innerHTML"];
-const _hoisted_7 = { class: "is-family-monospace" };
-const _hoisted_8 = /* @__PURE__ */ createBaseVNode("div", { class: "section-title is-flex is-align-items-center has-text-weight-bold" }, [
-  /* @__PURE__ */ createBaseVNode("div", { class: "circle-dot mr-3" }, [
-    /* @__PURE__ */ createBaseVNode("div")
-  ]),
-  /* @__PURE__ */ createBaseVNode("div", { class: "is-flex is-align-items-baseline" }, [
-    /* @__PURE__ */ createTextVNode("工作經歷"),
-    /* @__PURE__ */ createBaseVNode("span", { class: "ml-3" }, "WORK EXPERIENCE")
-  ])
-], -1);
-const _hoisted_9 = { class: "section-content mt-5" };
-const _sfc_main$2 = {
-  __name: "RightSide",
-  setup(__props) {
-    const autobiography = ref(`我做過許多行業：服務業、倉儲、便利商店、快遞、老闆...，直到36歲才回歸本行  ，因為入行的晚，所以也需要比其他人更努力。<br />  一開始就在上市公司待了2年，覺得磨練夠了（其實是因為薪水太低了）就出來闖一闖，為了學習自行架設網站，有一段時間是自行接案在家工作。<br />  為了維持生活，所以就職的公司幾乎都是新創或遊戲公司，也正是因為如此，每每專案完成或新創資金用罄都得再次尋找下一份工作，  也造就了我從事過多種類型的網站：  <span class="has-text-danger">形象網站</span>、  <span class="has-text-danger">社群</span>、  <span class="has-text-danger">電商</span>、  <span class="has-text-danger">遊戲</span>、  <span class="has-text-danger">管理後台</span>...。<br />
-  ***** 每個專案我都有把它完成，而且幾乎每一家公司都只有<span class="has-text-danger">一個</span>前端（除了遊戲公司）。*****`);
-    const experiences = ref([
-      {
-        id: "vlink",
-        startDate: "2021/10",
-        endDate: "2023/05",
-        company: "維林軟體有限公司",
-        jobTitle: "資深前端工程師",
-        monthlySalary: 83e3,
-        annualSalary: 1178600,
-        location: "台北市內湖區",
-        description: "論壇類型社群網站前後台",
-        jobs: [
-          "前台網頁功能撰寫、優化與維護。",
-          "管理後台網頁功能撰寫、優化與維護。",
-          "打包前台APP（iOS, Android）。",
-          "API串接。"
-        ],
-        tools: [
-          "HTML",
-          "SCSS",
-          "JavaScript",
-          "jQuery",
-          "Vue2",
-          "Vue3",
-          "Capacitor.js",
-          "Git"
-        ]
-      },
-      {
-        id: "katech",
-        startDate: "2020/06",
-        endDate: "2021/08",
-        company: "嘉德軟體有限公司",
-        jobTitle: "資深前端工程師",
-        monthlySalary: 75e3,
-        annualSalary: 975e3,
-        location: "台北市信義區",
-        description: "遊戲APP、遊戲Web、網站管理後台",
-        jobs: [
-          "前台Wrap功能撰寫、修改與維護。",
-          "管理後台網頁功能撰寫、修改與維護。",
-          "API資料串接。"
-        ],
-        tools: [
-          "HTML",
-          "SCSS",
-          "JavaScript",
-          "Vue2",
-          "React",
-          "PHP",
-          "Git"
-        ]
-      },
-      {
-        id: "molife",
-        startDate: "2018/06",
-        endDate: "2020/02",
-        company: "行冠企業股份有限公司",
-        jobTitle: "資深前端工程師",
-        monthlySalary: 66600,
-        annualSalary: 932400,
-        location: "台北市信義區",
-        description: "電商網站前台、活動網頁、裕隆相關企業形象網站製作",
-        jobs: [
-          "網頁切版\b。",
-          "前端網頁程式。",
-          "API資料串接。"
-        ],
-        tools: [
-          "HTML",
-          "SCSS",
-          "JavaScript",
-          "jQuery",
-          "Vue2"
-        ]
-      },
-      {
-        id: "ejay",
-        startDate: "2017/06",
-        endDate: "2018/05",
-        company: "翊傑資訊",
-        jobTitle: "全端工程師",
-        monthlySalary: 7e4,
-        annualSalary: 98e4,
-        location: "台北市大安區",
-        description: "嘉裕西服電商網站前台、第三方量測系統數據串接、數據計算",
-        jobs: [
-          "網頁切版\b。",
-          "前端網頁程式。",
-          "API資料串接。",
-          "伺服器架設。",
-          "第三方資料串接。"
-        ],
-        tools: [
-          "HTML",
-          "SCSS",
-          "JavaScript",
-          "jQuery",
-          "Vue2",
-          "PHP",
-          "Codeigniter",
-          "MySQL"
-        ]
-      },
-      {
-        id: "create_potential",
-        startDate: "2016/07",
-        endDate: "2017/04",
-        company: "創勢資訊",
-        jobTitle: "前端工程師",
-        monthlySalary: 67e3,
-        annualSalary: 938e3,
-        location: "台北市中正區",
-        description: "美食社群平台、海鮮電商平台製作",
-        jobs: [
-          "網頁切版\b。",
-          "前端網頁程式。",
-          "API資料串接。"
-        ],
-        tools: [
-          "HTML",
-          "SCSS",
-          "JavaScript",
-          "jQuery",
-          "Vue"
-        ]
-      },
-      {
-        id: "geli",
-        startDate: "2015/10",
-        endDate: "2016/06",
-        company: "給力行銷股份有限公司（鴻海新創）",
-        jobTitle: "前端工程師",
-        monthlySalary: 6e4,
-        annualSalary: 84e4,
-        location: "台北市中正區",
-        description: "興趣媒合社群平台",
-        jobs: [
-          "網頁切版\b。",
-          "前端網頁程式。",
-          "API資料串接。"
-        ],
-        tools: [
-          "HTML",
-          "SCSS",
-          "JavaScript",
-          "jQuery"
-        ]
-      },
-      {
-        id: "jet",
-        startDate: "2014/11",
-        endDate: "2015/05",
-        company: "捷崇有限公司",
-        jobTitle: "前端工程師",
-        monthlySalary: 61e3,
-        annualSalary: 854e3,
-        location: "台北市內湖區",
-        description: "遊戲網站前台",
-        jobs: [
-          "網頁切版\b。",
-          "前端網頁程式。"
-        ],
-        tools: [
-          "HTML",
-          "STYLUS",
-          "JavaScript",
-          "jQuery"
-        ]
-      },
-      {
-        id: "astro",
-        startDate: "2014/04",
-        endDate: "2015/10",
-        company: "泰偉電子股份有限公司",
-        jobTitle: "全端工程師",
-        monthlySalary: 4e4,
-        annualSalary: 56e4,
-        location: "新北市三重區",
-        description: "樂透網站製作",
-        jobs: [
-          "網頁切版\b。",
-          "前端網頁程式。",
-          "後台程式撰寫。",
-          "串接資料庫。"
-        ],
-        tools: [
-          "HTML",
-          "CSS",
-          "JavaScript",
-          "jQuery",
-          "PHP",
-          "Codeigniter"
-        ]
-      },
-      {
-        id: "unication",
-        startDate: "2012/02",
-        endDate: "2013/03",
-        company: "盟訊實業股份有限公司",
-        jobTitle: "研發應用工程師",
-        monthlySalary: 4e4,
-        annualSalary: 56e4,
-        location: "新北市五股區",
-        description: "通訊設備整合通化介面",
-        jobs: [
-          "分析UI架構。",
-          "設計, 撰寫UI介面。",
-          "負責資料存取(DB)。"
-        ],
-        tools: [
-          "HTML",
-          "CSS",
-          "JavaScript",
-          "jQuery",
-          "PHP",
-          "MySQL"
-        ]
-      },
-      {
-        id: "yoko-tech",
-        startDate: "2011/07",
-        endDate: "2013/07",
-        company: "悠克電子股份有限公司",
-        jobTitle: "軟體工程師",
-        monthlySalary: 35e3,
-        annualSalary: 49e4,
-        location: "新北市中和區",
-        description: "IPCAM UI介面製作",
-        jobs: [
-          "分析UI架構。",
-          "設計, 撰寫UI介面。",
-          "負責資料存取(DB)。",
-          "硬體測試介面撰寫"
-        ],
-        tools: [
-          "HTML",
-          "CSS",
-          "JavaScript",
-          "PHP",
-          "CGI"
-        ]
-      }
-    ]);
-    return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2, [
-        createBaseVNode("section", _hoisted_2$2, [
-          _hoisted_3$2,
-          createBaseVNode("div", _hoisted_4$1, [
-            createBaseVNode("div", _hoisted_5$1, [
-              createBaseVNode("div", {
-                class: "card-content is-size-6",
-                innerHTML: autobiography.value
-              }, null, 8, _hoisted_6)
-            ])
-          ])
-        ]),
-        createBaseVNode("section", _hoisted_7, [
-          _hoisted_8,
-          createBaseVNode("div", _hoisted_9, [
-            (openBlock(true), createElementBlock(Fragment, null, renderList(experiences.value, (experience) => {
-              return openBlock(), createBlock(_sfc_main$3, {
-                class: "card mb-5 is-size-6",
-                experience,
-                key: experience.id
-              }, null, 8, ["experience"]);
-            }), 128))
-          ])
-        ])
-      ]);
-    };
-  }
-};
 /*! Capacitor: https://capacitorjs.com/ - MIT License */
 const createCapacitorPlatforms = (win) => {
   const defaultPlatformMap = /* @__PURE__ */ new Map();
@@ -11228,7 +10775,7 @@ registerPlugin("CapacitorHttp", {
   web: () => new CapacitorHttpPluginWeb()
 });
 const App = registerPlugin("App", {
-  web: () => __vitePreload(() => import("./web-c301de16.js"), true ? [] : void 0).then((m) => new m.AppWeb())
+  web: () => __vitePreload(() => import("./web-710bac7d.js"), true ? [] : void 0).then((m) => new m.AppWeb())
 });
 function useExitApp() {
   const isQuit = ref(false);
@@ -11253,10 +10800,10 @@ function useExitApp() {
 function useDetectBrowser() {
   const isAndroid = navigator.userAgent.match(/Android/i);
   const isBlackBerry = navigator.userAgent.match(/BlackBerry/i);
-  const isIOS2 = navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
   const isOpera = navigator.userAgent.match(/Opera Mini/i);
   const isWindow = navigator.userAgent.match(/IEMobile/i);
-  const isMobile = computed(() => isAndroid || isBlackBerry || isIOS2 || isOpera || isWindow);
+  const isMobile = computed(() => isAndroid || isBlackBerry || isIOS || isOpera || isWindow);
   const iOSversion = () => {
     let d2, v;
     if (/iP(hone|od|ad)/.test(navigator.platform)) {
@@ -11278,205 +10825,26 @@ function useDetectBrowser() {
   return {
     isAndroid,
     isBlackBerry,
-    isIOS: isIOS2,
+    isIOS,
     isOpera,
     isWindow,
     isMobile,
     iOSversion
   };
 }
-function tryOnScopeDispose(fn) {
-  if (getCurrentScope()) {
-    onScopeDispose(fn);
-    return true;
-  }
-  return false;
-}
-function toValue(r) {
-  return typeof r === "function" ? r() : unref(r);
-}
-const isClient = typeof window !== "undefined";
-const noop4 = () => {
-};
-const isIOS = /* @__PURE__ */ getIsIOS();
-function getIsIOS() {
-  var _a;
-  return isClient && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.userAgent) && /* @__PURE__ */ /iP(ad|hone|od)/.test(window.navigator.userAgent);
-}
-function unrefElement(elRef) {
-  var _a;
-  const plain = toValue(elRef);
-  return (_a = plain == null ? void 0 : plain.$el) != null ? _a : plain;
-}
-const defaultWindow = isClient ? window : void 0;
-function useEventListener(...args) {
-  let target;
-  let events;
-  let listeners;
-  let options;
-  if (typeof args[0] === "string" || Array.isArray(args[0])) {
-    [events, listeners, options] = args;
-    target = defaultWindow;
-  } else {
-    [target, events, listeners, options] = args;
-  }
-  if (!target)
-    return noop4;
-  if (!Array.isArray(events))
-    events = [events];
-  if (!Array.isArray(listeners))
-    listeners = [listeners];
-  const cleanups = [];
-  const cleanup = () => {
-    cleanups.forEach((fn) => fn());
-    cleanups.length = 0;
-  };
-  const register = (el, event, listener3, options2) => {
-    el.addEventListener(event, listener3, options2);
-    return () => el.removeEventListener(event, listener3, options2);
-  };
-  const stopWatch = watch(
-    () => [unrefElement(target), toValue(options)],
-    ([el, options2]) => {
-      cleanup();
-      if (!el)
-        return;
-      cleanups.push(
-        ...events.flatMap((event) => {
-          return listeners.map((listener3) => register(el, event, listener3, options2));
-        })
-      );
-    },
-    { immediate: true, flush: "post" }
-  );
-  const stop = () => {
-    stopWatch();
-    cleanup();
-  };
-  tryOnScopeDispose(stop);
-  return stop;
-}
-let _iOSWorkaround = false;
-function onClickOutside(target, handler, options = {}) {
-  const { window: window2 = defaultWindow, ignore = [], capture = true, detectIframe = false } = options;
-  if (!window2)
-    return;
-  if (isIOS && !_iOSWorkaround) {
-    _iOSWorkaround = true;
-    Array.from(window2.document.body.children).forEach((el) => el.addEventListener("click", noop4));
-  }
-  let shouldListen = true;
-  const shouldIgnore = (event) => {
-    return ignore.some((target2) => {
-      if (typeof target2 === "string") {
-        return Array.from(window2.document.querySelectorAll(target2)).some((el) => el === event.target || event.composedPath().includes(el));
-      } else {
-        const el = unrefElement(target2);
-        return el && (event.target === el || event.composedPath().includes(el));
-      }
-    });
-  };
-  const listener3 = (event) => {
-    const el = unrefElement(target);
-    if (!el || el === event.target || event.composedPath().includes(el))
-      return;
-    if (event.detail === 0)
-      shouldListen = !shouldIgnore(event);
-    if (!shouldListen) {
-      shouldListen = true;
-      return;
-    }
-    handler(event);
-  };
-  const cleanup = [
-    useEventListener(window2, "click", listener3, { passive: true, capture }),
-    useEventListener(window2, "pointerdown", (e) => {
-      const el = unrefElement(target);
-      if (el)
-        shouldListen = !e.composedPath().includes(el) && !shouldIgnore(e);
-    }, { passive: true }),
-    detectIframe && useEventListener(window2, "blur", (event) => {
-      setTimeout(() => {
-        var _a;
-        const el = unrefElement(target);
-        if (((_a = window2.document.activeElement) == null ? void 0 : _a.tagName) === "IFRAME" && !(el == null ? void 0 : el.contains(window2.document.activeElement)))
-          handler(event);
-      }, 0);
-    })
-  ].filter(Boolean);
-  const stop = () => cleanup.forEach((fn) => fn());
-  return stop;
-}
-const _hoisted_1$1 = { class: "modal is-active p-2" };
-const _hoisted_2$1 = /* @__PURE__ */ createBaseVNode("div", { class: "modal-background" }, null, -1);
-const _hoisted_3$1 = /* @__PURE__ */ createBaseVNode("p", { class: "modal-card-title" }, "提示訊息：", -1);
-const _hoisted_4 = /* @__PURE__ */ createBaseVNode("section", { class: "modal-card-body" }, " 您是否真的要退出 App？ ", -1);
-const _hoisted_5 = { class: "modal-card-foot is-justify-content-flex-end" };
-const _sfc_main$1 = {
-  __name: "ModalLogout",
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ["update:modelValue"],
-  setup(__props, { emit: emit2 }) {
-    const closeModal = () => {
-      emit2("update:modelValue", false);
-    };
-    const modalCardRef = ref(null);
-    onClickOutside(modalCardRef, closeModal);
-    return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$1, [
-        _hoisted_2$1,
-        createBaseVNode("div", {
-          class: "modal-card",
-          ref_key: "modalCardRef",
-          ref: modalCardRef
-        }, [
-          createBaseVNode("header", { class: "modal-card-head" }, [
-            _hoisted_3$1,
-            createBaseVNode("button", {
-              onClick: closeModal,
-              class: "delete",
-              "aria-label": "close"
-            })
-          ]),
-          _hoisted_4,
-          createBaseVNode("footer", _hoisted_5, [
-            createBaseVNode("button", {
-              onClick: closeModal,
-              type: "button",
-              class: "button"
-            }, " 取消 "),
-            createBaseVNode("button", {
-              onClick: _cache[0] || (_cache[0] = withModifiers(($event) => unref(App).exitApp(), ["prevent"])),
-              type: "button",
-              class: "button is-danger"
-            }, " 退出App ")
-          ])
-        ], 512)
-      ]);
-    };
-  }
-};
 const Toast = registerPlugin("Toast", {
-  web: () => __vitePreload(() => import("./web-f28e8896.js"), true ? [] : void 0).then((m) => new m.ToastWeb())
+  web: () => __vitePreload(() => import("./web-eee5fef2.js"), true ? [] : void 0).then((m) => new m.ToastWeb())
 });
 const HomeView_vue_vue_type_style_index_0_lang = "";
-const _hoisted_1 = { class: "columns is-centered has-background-white mx-0" };
-const _hoisted_2 = { class: "fixed-go-top" };
-const _hoisted_3 = {
-  key: 1,
-  href: "/app-myresume.apk"
-};
+const _hoisted_1 = /* @__PURE__ */ createBaseVNode("div", { class: "home-bg" }, null, -1);
+const _hoisted_2 = { class: "home-wrapper" };
+const _hoisted_3 = /* @__PURE__ */ createStaticVNode('<div class="home-inner"><div class="content"><h2 class="title">WEDDING PASS</h2><div class="options"><div class="option"><div class="line"></div><div class="img-cover icon01"><img src="' + _imports_0$1 + '"></div><div class="option-text">輕鬆管理</div></div><div class="option"><div class="line"></div><div class="img-cover icon02"><img src="' + _imports_1$1 + '"></div><div class="option-text">提領喜餅</div></div><div class="option"><div class="line"></div><div class="img-cover icon03"><img src="' + _imports_2 + '"></div><div class="option-text">QRCode快速簽到</div></div></div></div><div class="content-footer"><button type="button" class="btn btn-link"> 設計專屬於你的祝福 </button></div></div>', 1);
 const _sfc_main = {
   __name: "HomeView",
   setup(__props) {
     const homeRef = ref(null);
     const { isQuit, addCountdown } = useExitApp();
-    const { isIOS: isIOS2, isAndroid, isMobile } = useDetectBrowser();
+    useDetectBrowser();
     const platForm = Capacitor.getPlatform();
     const showToast = async (showText) => {
       await Toast.show({
@@ -11487,7 +10855,7 @@ const _sfc_main = {
       if (isQuit.value) {
         App.exitApp();
       } else {
-        showToast("***** 再按一次退出程序");
+        showToast("再按一次退出程序aaa");
         isQuit.value = true;
         addCountdown();
       }
@@ -11495,47 +10863,19 @@ const _sfc_main = {
     if (platForm === "android") {
       App.addListener("backButton", exitMyApp);
     }
-    const backToTop = () => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth"
-      });
-    };
-    const showModal = ref(false);
+    ref(false);
     return (_ctx, _cache) => {
-      const _component_font_awesome_icon = resolveComponent("font-awesome-icon");
-      return openBlock(), createElementBlock(Fragment, null, [
-        createBaseVNode("div", {
-          class: "home max-width-1024 has-background-white",
-          ref_key: "homeRef",
-          ref: homeRef
-        }, [
-          createVNode(Header),
-          createBaseVNode("div", _hoisted_1, [
-            createVNode(LeftSide, { class: "column is-5 pt-6 px-0" }),
-            createVNode(_sfc_main$2, { class: "column is-7 pt-6 px-4" })
-          ]),
-          createBaseVNode("div", _hoisted_2, [
-            createBaseVNode("i", { onClick: backToTop }, "Top"),
-            unref(platForm) === "android" ? (openBlock(), createElementBlock("i", {
-              key: 0,
-              class: "hidden-desktop",
-              onClick: _cache[0] || (_cache[0] = withModifiers(($event) => showModal.value = true, ["prevent"]))
-            }, [
-              createVNode(_component_font_awesome_icon, { icon: "fa-solid fa-arrow-right-from-bracket" })
-            ])) : createCommentVNode("", true),
-            unref(platForm) === "web" && unref(isAndroid) ? (openBlock(), createElementBlock("a", _hoisted_3, [
-              createVNode(_component_font_awesome_icon, { icon: "fa-solid fa-download" })
-            ])) : createCommentVNode("", true)
-          ])
-        ], 512),
-        showModal.value ? (openBlock(), createBlock(_sfc_main$1, {
-          key: 0,
-          modelValue: showModal.value,
-          "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => showModal.value = $event)
-        }, null, 8, ["modelValue"])) : createCommentVNode("", true)
-      ], 64);
+      return openBlock(), createElementBlock("div", {
+        class: "home",
+        ref_key: "homeRef",
+        ref: homeRef
+      }, [
+        _hoisted_1,
+        createBaseVNode("div", _hoisted_2, [
+          createVNode(Navbar),
+          _hoisted_3
+        ])
+      ], 512);
     };
   }
 };
@@ -11553,7 +10893,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => __vitePreload(() => import("./AboutView-7675fdc2.js"), true ? ["assets/AboutView-7675fdc2.js","assets/AboutView-fe0787ef.css"] : void 0)
+      component: () => __vitePreload(() => import("./AboutView-76c6d113.js"), true ? ["assets/AboutView-76c6d113.js","assets/AboutView-fe0787ef.css"] : void 0)
     }
   ]
 });
@@ -11569,7 +10909,8 @@ library$1.add(
   faCaretLeft,
   faCaretRight,
   faArrowRightFromBracket,
-  faDownload
+  faDownload,
+  faBars
 );
 const app = createApp(App$1).component("font-awesome-icon", FontAwesomeIcon);
 app.use(pinia);

@@ -1,9 +1,9 @@
 <template>
   <header class="columns is-full is-justify-content-flex-start">
     <div class="column is-5">
-      <div class="img-cover">
+      <!-- <div class="img-cover">
         <img src="@/assets/avatar.png" title="jeff huang" alt="jeff huang" />
-      </div>
+      </div> -->
     </div>
     
     <div class="column is-3 information is-family-monospace">

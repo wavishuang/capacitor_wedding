@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { 
   faHome, faPhone, faEnvelope, faList,
   faCoffee, faCaretUp, faCaretDown, faCaretLeft, faCaretRight,
-  faArrowRightFromBracket, faDownload
+  faArrowRightFromBracket, faDownload,
+  faBars
 } from '@fortawesome/free-solid-svg-icons'
 import 'bulma/css/bulma.min.css'
-
 
 import App from './App.vue'
 import router from './router'
@@ -22,7 +22,8 @@ library.add(
   faList,
   faCoffee,
   faCaretUp, faCaretDown, faCaretLeft, faCaretRight,
-  faArrowRightFromBracket, faDownload
+  faArrowRightFromBracket, faDownload,
+  faBars
 )
 
 const app = createApp(App).component('font-awesome-icon', FontAwesomeIcon)
