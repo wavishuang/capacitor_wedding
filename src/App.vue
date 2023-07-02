@@ -18,6 +18,10 @@
 </script>
 
 <style lang="scss">
+* {
+  boxing-size: border-box;
+}
+
 .layout {
   width: 100vw;
   height: 100vh;

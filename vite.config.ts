@@ -13,7 +13,7 @@ export default defineConfig({
   },
   root: './src',
   build: {
-    outDir: '../www',
+    outDir: '../dist',
     minify: false,
     emptyOutDir: true,
   },

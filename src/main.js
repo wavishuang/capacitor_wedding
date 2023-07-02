@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { library } from '@fortawesome/fontawesome-svg-core'
+
+import 'normalize.css/normalize.css'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { 
   faHome, faPhone, faEnvelope, faList,
@@ -8,6 +10,8 @@ import {
   faArrowRightFromBracket, faDownload,
   faBars
 } from '@fortawesome/free-solid-svg-icons'
+
+
 import 'bulma/css/bulma.min.css'
 
 import App from './App.vue'

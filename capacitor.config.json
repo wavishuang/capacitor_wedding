@@ -1,7 +1,7 @@
 {
   "appId": "com.wedding.app",
   "appName": "wedding",
-  "webDir": "www",
+  "webDir": "dist",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 3000,

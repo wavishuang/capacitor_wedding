@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">wedding</string>
-    <string name="title_activity_main">wedding</string>
+    <string name="app_name">wedding-app</string>
+    <string name="title_activity_main">wedding-app</string>
     <string name="package_name">com.wedding.app</string>
     <string name="custom_url_scheme">com.wedding.app</string>
 </resources>

@@ -18,21 +18,21 @@
               <div class="img-cover icon01">
                 <img src="@/assets/icon01-1.png" />
               </div>
-              <div class="option-text">輕鬆管理</div>
+              <div class="option-text">輕鬆<br class="mobile-shown" />管理</div>
             </div>
             <div class="option">
               <div class="line"></div>
               <div class="img-cover icon02">
                 <img src="@/assets/icon02-1.png" />
               </div>
-              <div class="option-text">提領喜餅</div>
+              <div class="option-text">提領<br class="mobile-shown" />喜餅</div>
             </div>
             <div class="option">
               <div class="line"></div>
               <div class="img-cover icon03">
                 <img src="@/assets/icon03-1.png" />
               </div>
-              <div class="option-text">QRCode快速簽到</div>
+              <div class="option-text">QRCode<br class="mobile-shown" />快速簽到</div>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@
       if(isQuit.value) {
         App.exitApp()
       } else {
-        showToast('再按一次退出程序aaa')
+        showToast('再按一次退出程序')
         isQuit.value = true
         addCountdown()
       }
@@ -124,6 +124,10 @@
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+
+.mobile-shown {
+  display: none;
+}
 
 .home {
   width: 100%;
@@ -243,7 +247,7 @@
       line-height: 2.55208vw;
       letter-spacing: 3.7px;
       color: #4C4053;
-      min-width: 217px;
+      min-width: 260px;
       min-height: 44px;
     }
   }
@@ -261,11 +265,14 @@
 
   .home-inner {
     width: calc(100vw - 10vw);
-    margin: 6.4vw auto 8.7vw;
+    margin: 6.4vw auto 0;
     height: calc(100vh - 65px - 6.4vw - 8.7vw);
     border-width: 1px;
+    padding: 0;
 
     .content {
+      flex: 2;
+      justify-content: flex-end;
       .title {
         font-size: 22px;
         line-height: 27px;
@@ -284,6 +291,9 @@
     }
 
     .content-footer {
+      flex: 1;
+      display: flex;
+      align-items: center;
       .btn.btn-link {
         font-size: 16px;
       }
@@ -292,24 +302,24 @@
 }
 
 @media screen and (max-width: 767px) {
+  .mobile-shown {
+    display: block;
+  }
+
   .home-inner {
     .content {
+      width: 79%;
       .options {
         .option {
           height: 118px;
           .img-cover {
             &.icon01,
-            &.icon02 {
-              &+.option-text {
-                width: 40px;
-                line-height: 21px;
-              }
-            }
-
+            &.icon02,
             &.icon03 {
               &+.option-text {
-                width: 80px;
+                width: 100%;
                 line-height: 21px;
+                text-align: center;
               }
             }
           }

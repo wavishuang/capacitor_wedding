@@ -44,7 +44,6 @@
     import { useDetectBrowser, useExitApp } from '@/compositions/app.js'
 
     import ModalLogout from '@/components/ModalLogout.vue'
-  
 
   /**
   * home ref
