@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 // import { useStore } from 'vuex'
 import { Capacitor } from '@capacitor/core'
+import { Toast } from '@capacitor/toast'
 // import { ANDROID_VERSION, IOS_VERSION, versionFormat } from '@/utils'
 
 // 再按一次退出程序
@@ -122,6 +123,18 @@ export function useBrowser() {
   if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && browserIs.value !== "Opera") browserIs.value = "IE" //判斷是否IE瀏覽器
 
   return { browserIs }
+}
+
+export function useToast() {
+  const showToast = async (showText) => {
+    await Toast.show({
+      text: showText,
+    })
+  }
+
+  return {
+    showToast
+  }
 }
 
 // IOS & Android 檢查新版本

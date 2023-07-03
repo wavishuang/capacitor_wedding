@@ -15,6 +15,35 @@
 </template>
 
 <script setup>
+  /**
+   * imports
+  */
+    import { Capacitor } from '@capacitor/core'
+    import { App } from '@capacitor/app'
+    import { useDetectBrowser, useExitApp, useToast } from '@/compositions/app.js'
+  /**
+  * Capacitor platform
+  */
+    const { isQuit, addCountdown } = useExitApp()
+    const { isIOS, isAndroid, isMobile } = useDetectBrowser()
+    const { showToast } = useToast()
+
+    const platForm = Capacitor.getPlatform()
+
+    const exitMyApp = () => {
+      if(isQuit.value) {
+        App.exitApp()
+      } else {
+        showToast('再按一次退出程序')
+        isQuit.value = true
+        addCountdown()
+      }
+    }
+  
+    /** 安卓"返回鍵"按兩次"退出" */
+    if(platForm === 'android') {
+      App.addListener('backButton', exitMyApp)
+    }
 </script>
 
 <style lang="scss">
