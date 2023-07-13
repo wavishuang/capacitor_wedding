@@ -37,9 +37,12 @@
         </div>
 
         <div class="content-footer">
-          <button type="button" class="btn btn-link">
+          <RouterLink
+            to="/design" 
+            class="btn btn-link"
+          >
             設計專屬於你的祝福
-          </button>
+          </RouterLink>
         </div>
       </div>
       
@@ -51,15 +54,10 @@
   /**
   * imports
   */
-    import Navbar from '@/components/Navbar.vue'
-    import LeftSide from '@/components/LeftSide.vue'
-    import RightSide from '@/components/RightSide.vue'
+    import Navbar from '@/components/home/Navbar.vue'
 </script>
 
 <style lang="scss">
-  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
-
   .mobile-shown {
     display: none;
   }
@@ -169,6 +167,9 @@
     .content-footer {
       margin: 3.90625vw 0;
       .btn.btn-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 26.40625vw;
         height: 5.3125vw;
         /* UI Properties */

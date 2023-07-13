@@ -1,17 +1,10 @@
 <template>
-  <div class="layout">
+  <div 
+    class="layout"
+    :class="'layout-' + page"
+  >
     <RouterView />
   </div>
-  
-
-  <!-- <footer class="footer">
-    <div class="content has-text-centered">
-      <font-awesome-icon icon="fa-solid fa-caret-left" />
-      <font-awesome-icon icon="fa-solid fa-home" />
-      <font-awesome-icon icon="fa-solid fa-coffee" />
-      <font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" />
-    </div>
-  </footer> -->
 </template>
 
 <script setup>
@@ -21,6 +14,9 @@
     import { Capacitor } from '@capacitor/core'
     import { App } from '@capacitor/app'
     import { useDetectBrowser, useExitApp, useToast } from '@/compositions/app.js'
+    import { computed } from 'vue'
+    import { useRoute } from 'vue-router'
+
   /**
   * Capacitor platform
   */
@@ -44,11 +40,25 @@
     if(platForm === 'android') {
       App.addListener('backButton', exitMyApp)
     }
+
+  /**
+   * route
+  */
+    const route = useRoute()
+
+    const page = computed(() => route.path !== '/' ? route.path.split('/')[1] : '')
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+
+@font-face {
+	font-family: 'Source Han Serif TW Black';
+	src: local("Source Han Serif TW"), url('./assets/fonts/NotoSerifCJKtc-Bold.otf') format('opentype');
+}
+
 * {
-  boxing-size: border-box;
+  box-sizing: border-box;
 }
 
 .layout {
@@ -60,5 +70,11 @@
   background-size: cover;
   overflow-x: hidden;
   overflow-y: auto;
+
+  &.layout-design {
+    background-image: none;
+    background-color: #F2F3F0;
+    min-height: 52.08vw;
+  }
 }
 </style>
